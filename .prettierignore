@@ -1,0 +1,9 @@
+.yarn
+yarn.lock
+.github
+.next
+next-env.d.ts
+out
+dist
+public
+node_modules
