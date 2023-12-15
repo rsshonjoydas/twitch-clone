@@ -1,10 +1,11 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 model User {
@@ -20,8 +21,34 @@ model User {
   blocking        Block[]     @relation("Blocking")
   blockedBy       Block[]     @relation("BlockedBy")
 
+  stream          Stream?
+
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+}
+
+model Stream {
+  id                    String      @id @default(auto()) @map("_id") @db.ObjectId
+  name                  String 
+  thumbnailUrl          String? 
+
+  ingressId             String?
+  serverUrl             String?
+  streamKey             String?
+
+  isLive                Boolean     @default(false)
+  isChatEnabled         Boolean     @default(true)
+  isChatDelayed         Boolean     @default(false)
+  isChatFollowersOnly   Boolean     @default(false)
+
+  userId                String      @db.ObjectId @unique
+  user                  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ingressId])
+  @@fulltext([name])
 }
 
 model Follow {
