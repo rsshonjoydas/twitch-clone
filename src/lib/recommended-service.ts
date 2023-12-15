@@ -22,13 +22,21 @@ export const getRecommended = async () => {
       })
       .then((follows) => follows.map((follow) => follow.followingId));
 
+    const blockedUserIds = await db.block
+      .findMany({
+        where: {
+          blockedId: userId,
+        },
+      })
+      .then((blockings) => blockings.map((blocking) => blocking.blockerId));
+
     users = await db.user.findMany({
       where: {
         AND: [
           {
             NOT: {
               id: {
-                in: [...followingUserIds, userId], // Exclude current user from recommended list
+                in: [...followingUserIds, ...blockedUserIds, userId], // Exclude current user, following users, and blocked users from recommended list
               },
             },
           },
