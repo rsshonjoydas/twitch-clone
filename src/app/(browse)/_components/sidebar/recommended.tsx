@@ -9,7 +9,9 @@ import { useSidebar } from '@/store/use-sidebar';
 import { UserItem, UserItemSkeleton } from './user-item';
 
 interface RecommendedProps {
-  data: User[];
+  data: (User & {
+    stream: { isLive: boolean } | null;
+  })[];
 }
 
 export const Recommended = ({ data }: RecommendedProps) => {
@@ -30,7 +32,7 @@ export const Recommended = ({ data }: RecommendedProps) => {
             key={user.id}
             username={user.username}
             imageUrl={user.imageUrl}
-            isLive={false}
+            isLive={user.stream?.isLive}
           />
         ))}
       </ul>
