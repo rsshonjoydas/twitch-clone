@@ -47,7 +47,7 @@ model Stream {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([ingressId])
+  @@unique([ingressId])
   @@fulltext([name])
 }
 
