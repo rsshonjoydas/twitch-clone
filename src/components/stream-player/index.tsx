@@ -7,9 +7,9 @@ import { useViewerToken } from '@/hooks/use-viewer-token';
 import { cn } from '@/lib/utils';
 import { useChatSidebar } from '@/store/use-chat-sidebar';
 
-import { Chat } from './chat';
+import { Chat, ChatSkeleton } from './chat';
 import { ChatToggle } from './chat-toggle';
-import { Video } from './video';
+import { Video, VideoSkeleton } from './video';
 
 interface StreamPlayerProps {
   user: User & { stream: Stream | null };
@@ -17,12 +17,24 @@ interface StreamPlayerProps {
   isFollowing: boolean;
 }
 
+export const StreamPlayerSkeleton = () => (
+  <div className='grid h-full grid-cols-1 lg:grid-cols-3 lg:gap-y-0 xl:grid-cols-3 2xl:grid-cols-6'>
+    <div className='hidden-scrollbar col-span-1 space-y-4 pb-10 lg:col-span-2 lg:overflow-y-auto xl:col-span-2 2xl:col-span-5'>
+      <VideoSkeleton />
+      {/* TODO: Header Skeleton */}
+    </div>
+    <div className='col-span-1 bg-background'>
+      <ChatSkeleton />
+    </div>
+  </div>
+);
+
 export const StreamPlayer = ({ user, stream, isFollowing }: StreamPlayerProps) => {
   const { token, name, identity } = useViewerToken(user.id);
   const { collapsed } = useChatSidebar((state) => state);
 
   if (!token || !name || !identity) {
-    return <div>Cannot watch the stream</div>;
+    return <StreamPlayerSkeleton />;
   }
 
   return (

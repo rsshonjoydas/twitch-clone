@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 
 'use client';
@@ -10,9 +9,10 @@ import { useMediaQuery } from 'usehooks-ts';
 
 import { ChatVariant, useChatSidebar } from '@/store/use-chat-sidebar';
 
-import { ChatForm } from './chat-form';
-import { ChatHeader } from './chat-header';
-import { ChatList } from './chat-list';
+import { ChatCommunity } from './chat-community';
+import { ChatForm, ChatFormSkeleton } from './chat-form';
+import { ChatHeader, ChatHeaderSkeleton } from './chat-header';
+import { ChatList, ChatListSkeleton } from './chat-list';
 
 interface ChatProps {
   hostName: string;
@@ -84,7 +84,17 @@ export const Chat = ({
           />
         </>
       )}
-      {variant === ChatVariant.COMMUNITY && <p>Community</p>}
+      {variant === ChatVariant.COMMUNITY && (
+        <ChatCommunity viewerName={viewerName} hostName={hostName} isHidden={isHidden} />
+      )}
     </div>
   );
 };
+
+export const ChatSkeleton = () => (
+  <div className='flex h-[calc(100vh-80px)] flex-col border-2 border-b border-l pt-0'>
+    <ChatHeaderSkeleton />
+    <ChatListSkeleton />
+    <ChatFormSkeleton />
+  </div>
+);
